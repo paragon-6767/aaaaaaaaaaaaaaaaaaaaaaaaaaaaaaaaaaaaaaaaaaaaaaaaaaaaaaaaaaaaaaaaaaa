@@ -32,17 +32,28 @@
   </div>
 
   <script>
-    const PASSWORD = "doYourHomework"; // CHANGE THIS
+  const PASSWORD = "doYourHomework"; // CHANGE THIS
 
-    function check() {
-      const input = document.getElementById("pw").value;
-      if (input === PASSWORD) {
-        // pass a token to the game
-        window.location.href = "game.html?access=granted";
-      } else {
-        document.getElementById("msg").textContent = "Wrong password";
-      }
+  async function check() {
+    const input = document.getElementById("pw").value;
+
+    if (input === PASSWORD) {
+      // 1. Open about:blank
+      const w = window.open("about:blank");
+
+      // 2. Load the HTML you want
+      const res = await fetch("game.html");
+      const html = await res.text();
+
+      // 3. Inject into about:blank
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+    } else {
+      document.getElementById("msg").textContent = "Wrong password";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
