@@ -1,66 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Enter Password</title>
+  <meta charset="UTF-8">
+  <title>Password Protected Loader</title>
   <style>
     body {
-      background: #111;
-      color: white;
       font-family: sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
     }
-    .box {
-      text-align: center;
-    }
-    input, button {
-      padding: 10px;
-      margin-top: 10px;
+    input {
+      padding: 8px;
       font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #msg {
+      color: red;
+      margin-top: 10px;
+      height: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>Enter Password to Play</h2>
-    <input id="pw" type="password" placeholder="Password">
-    <br>
-    <button onclick="check()">Play</button>
-    <p id="msg"></p>
-  </div>
+
+  <h1>Enter Password to Access Game</h1>
+  <input type="password" id="pw" placeholder="Password">
+  <button onclick="check()">Enter</button>
+  <div id="msg"></div>
 
   <script>
-  ////////////PASSWORD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const PASSWORD = "aaa";
+    const PASSWORD = "doYourHomework"; // Change this
 
-  async function check() {
-    const input = document.getElementById("pw").value;
+    function check() {
+      const input = document.getElementById("pw").value;
 
-    if (input === PASSWORD) {
+      if (input === PASSWORD) {
+        // Open a new about:blank tab immediately
+        const w = window.open("about:blank");
 
-      // 1️⃣ OPEN IMMEDIATELY (user gesture preserved)
-      const w = window.open("about:blank");
+        if (!w) {
+          alert("Popup blocked! Please allow popups for this site.");
+          return;
+        }
 
-      if (!w) {
-        alert("Popup was blocked — Please allow popups for this site.");
-        return;
+        // Load game.html from the same repo
+        fetch("game.html")
+          .then(res => res.text())
+          .then(html => {
+            w.document.open();
+            w.document.write(html);
+            w.document.close();
+          })
+          .catch(err => {
+            w.document.write("<h1>Failed to load game.html</h1>");
+            console.error("Error loading game.html:", err);
+          });
+
+      } else {
+        document.getElementById("msg").textContent = "Wrong password";
       }
-
-      // 2️⃣ THEN fetch
-      const res = await fetch("game.html");
-      const html = await res.text();
-
-      // 3️⃣ THEN inject
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-
-    } else {
-      document.getElementById("msg").textContent = "Wrong password";
     }
-  }
   </script>
 
 </body>
