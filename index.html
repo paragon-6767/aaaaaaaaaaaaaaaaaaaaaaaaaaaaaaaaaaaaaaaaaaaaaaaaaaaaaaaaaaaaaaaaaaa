@@ -31,35 +31,44 @@
     <p id="msg"></p>
   </div>
 
-  <script>
-  const PASSWORD = "doYourHomework";
+<input id="pw" type="password">
+<button onclick="check()">Enter</button>
+<div id="msg"></div>
 
-  async function check() {
-    const input = document.getElementById("pw").value;
+<script>
+const PASSWORD = "password";
+  //////////PASSWORD HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (input === PASSWORD) {
+function check() {
+  const input = document.getElementById("pw").value;
 
-      // 1️⃣ OPEN IMMEDIATELY (user gesture preserved)
-      const w = window.open("about:blank");
+  if (input === PASSWORD) {
 
-      if (!w) {
-        alert("Popup was blocked — Please allow popups for this site.");
-        return;
-      }
+    // 1️⃣ Open the new tab immediately
+    const w = window.open("about:blank");
 
-      // 2️⃣ THEN fetch
-      const res = await fetch("game.html");
-      const html = await res.text();
-
-      // 3️⃣ THEN inject
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-
-    } else {
-      document.getElementById("msg").textContent = "Wrong password";
+    if (!w) {
+      alert("Popup blocked! Allow popups for this site.");
+      return;
     }
+
+    // 2️⃣ Write the contents of game.html directly into the new tab
+    fetch("game.html")  // must be same repo / same origin
+      .then(res => res.text())
+      .then(html => {
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+      })
+      .catch(err => {
+        w.document.write("<h1>Failed to load game.html</h1>");
+        console.error(err);
+      });
+
+  } else {
+    document.getElementById("msg").textContent = "Wrong password";
   }
+}
 </script>
 
 </body>
