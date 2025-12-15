@@ -23,48 +23,41 @@
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>Enter Password to Play</h2>
-    <input id="pw" type="password" placeholder="Password">
-    <br>
-    <button onclick="check()">Play</button>
-    <p id="msg"></p>
-  </div>
 
-<script>
-//////////PASSWORD HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const PASSWORD = "aaa";
-function check() {
-  const input = document.getElementById("pw").value;
-
-  if (input === PASSWORD) {
-
-    // 1️⃣ Open the new tab immediately
-    const w = window.open("about:blank");
-
-    if (!w) {
-      alert("Popup blocked! Allow popups for this site.");
-      return;
+  <script>
+  //////////PASSWORD HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const PASSWORD = "aaa";
+  function check() {
+    const input = document.getElementById("pw").value;
+  
+    if (input === PASSWORD) {
+  
+      // 1️⃣ Open the new tab immediately
+      const w = window.open("about:blank");
+  
+      if (!w) {
+        alert("Popup blocked! Allow popups for this site.");
+        return;
+      }
+  
+      // 2️⃣ Write the contents of game.html directly into the new tab
+      fetch("game.html")  // must be same repo / same origin
+        .then(res => res.text())
+        .then(html => {
+          w.document.open();
+          w.document.write(html);
+          w.document.close();
+        })
+        .catch(err => {
+          w.document.write("<h1>Failed to load game.html</h1>");
+          console.error(err);
+        });
+  
+    } else {
+      document.getElementById("msg").textContent = "Wrong password";
     }
-
-    // 2️⃣ Write the contents of game.html directly into the new tab
-    fetch("game.html")  // must be same repo / same origin
-      .then(res => res.text())
-      .then(html => {
-        w.document.open();
-        w.document.write(html);
-        w.document.close();
-      })
-      .catch(err => {
-        w.document.write("<h1>Failed to load game.html</h1>");
-        console.error(err);
-      });
-
-  } else {
-    document.getElementById("msg").textContent = "Wrong password";
   }
-}
-</script>
+  </script>
 
 </body>
 </html>
