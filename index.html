@@ -32,23 +32,30 @@
   </div>
 
   <script>
-  const PASSWORD = "doYourHomework"; // CHANGE THIS
+  const PASSWORD = "doYourHomework";
 
   async function check() {
     const input = document.getElementById("pw").value;
 
     if (input === PASSWORD) {
-      // 1. Open about:blank
+
+      // 1️⃣ OPEN IMMEDIATELY (user gesture preserved)
       const w = window.open("about:blank");
 
-      // 2. Load the HTML you want
+      if (!w) {
+        alert("Popup was blocked — Please allow popups for this site.");
+        return;
+      }
+
+      // 2️⃣ THEN fetch
       const res = await fetch("game.html");
       const html = await res.text();
 
-      // 3. Inject into about:blank
+      // 3️⃣ THEN inject
       w.document.open();
       w.document.write(html);
       w.document.close();
+
     } else {
       document.getElementById("msg").textContent = "Wrong password";
     }
